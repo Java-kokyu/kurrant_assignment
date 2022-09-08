@@ -7,8 +7,14 @@ import com.example.kurrant.model.Article;
 import com.example.kurrant.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.annotations.Delete;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +58,42 @@ public class ArticleController {
     public void deleteArticle(@PathVariable Long boardId, @PathVariable Long articleId) {
         articleService.deleteArticle(boardId, articleId);
     }
+
+    //5. 게시글 조회
+    @GetMapping("/api/articles/search")
+    public List<Response> searchArticleByKeyword(@RequestParam(required = false, defaultValue = "") String keyword) {
+        List<Article> articles = articleService.searchArticleByKeyword(keyword);
+        List<Response> responses = new ArrayList<>();
+        for (Article article : articles) {
+            String boardName = articleService.getBoardName(article.getBoard_id());
+            Response response = new Response(article, boardName);
+            responses.add(response);
+        }
+        return responses;
+    }
+
+    //5. 게시글 조회
+    @GetMapping("/api/articles/date")
+    public List<Response> searchArticleByDate(@RequestParam String startDate,
+                                              @RequestParam String endDate) {
+        LocalDateTime startDateTime = LocalDate.of(Integer.parseInt(startDate.substring(0, 4)),
+                                                Integer.parseInt(startDate.substring(4, 6)),
+                                                Integer.parseInt(startDate.substring(6, 8)))
+                                                .atTime(LocalTime.MIDNIGHT);
+        LocalDateTime endDateTime = LocalDate.of(Integer.parseInt(endDate.substring(0, 4)),
+                                                Integer.parseInt(endDate.substring(4, 6)),
+                                                Integer.parseInt(endDate.substring(6, 8)))
+                                                .atTime(LocalTime.MAX);
+        List<Article> articles = articleService.searchArticleByDate(startDateTime, endDateTime);
+        List<Response> responses = new ArrayList<>();
+        for (Article article : articles) {
+            String boardName = articleService.getBoardName(article.getBoard_id());
+            Response response = new Response(article, boardName);
+            responses.add(response);
+        }
+        return responses;
+    }
+
 
     @GetMapping("/api/boards/{boardId}")
     public String getBoardName(@PathVariable Long boardId) {

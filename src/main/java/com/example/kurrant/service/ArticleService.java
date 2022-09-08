@@ -5,6 +5,7 @@ import com.example.kurrant.repository.ArticleMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -41,5 +42,15 @@ public class ArticleService implements ArticleMapper {
     @Override
     public void deleteArticle(Long boardId, Long articleId) {
         articleMapper.deleteArticle(boardId, articleId);
+    }
+
+    @Override
+    public List<Article> searchArticleByKeyword(String keyword) {
+        return articleMapper.searchArticleByKeyword(keyword);
+    }
+
+    @Override
+    public List<Article> searchArticleByDate(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        return articleMapper.searchArticleByDate(startDateTime, endDateTime);
     }
 }

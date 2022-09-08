@@ -3,9 +3,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.kurrant.repository.ArticleMapper">
-    <insert id="createArticle" parameterType="map" useGeneratedKeys="true" keyProperty="articleId">
+    <insert id="createArticle" parameterType="map" useGeneratedKeys="true" keyProperty="article_id">
         INSERT INTO cms__article(board_id, title, content_html, content_string)
-        VALUES (#{article.boardId}, #{article.title}, #{article.contentHtml}, #{article.contentString})
+        VALUES (#{article.board_id}, #{article.title}, #{article.content_html}, #{article.content_string})
     </insert>
 
     <select id="getArticleList" resultType="com.example.kurrant.model.Article">
@@ -38,5 +38,18 @@
         FROM cms__article
         WHERE board_id = #{boardId} AND article_id = #{articleId}
     </delete>
+
+    <select id="searchArticleByKeyword" resultType="com.example.kurrant.model.Article">
+        SELECT *
+        FROM cms__article
+        WHERE title LIKE CONCAT('%',#{keyword},'%')
+    </select>
+
+    <select id="searchArticleByDate" resultType="com.example.kurrant.model.Article">
+        SELECT *
+        FROM cms__article
+        WHERE created_datetime BETWEEN #{startDateTime} AND #{endDateTime}
+    </select>
+
 
 </mapper>
