@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper
 @Repository
 public interface ArticleMapper {
-    void createArticle(@Param("article") Article request);
+    int createArticle(@Param("article") Article request);
 
     List<Article> getArticleList(Long boardId);
 
@@ -19,9 +19,9 @@ public interface ArticleMapper {
 
     Article retrieveArticle(Long boardId, Long articleId);
 
-    void plusViewCount(Long articleId);
+    int plusViewCount(Long articleId);
 
-    void deleteArticle(Long boardId, Long articleId);
+    int deleteArticle(Long boardId, Long articleId);
 
     List<Article> searchArticleByKeyword(String keyword);
 

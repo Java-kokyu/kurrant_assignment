@@ -14,8 +14,8 @@ public class ArticleService implements ArticleMapper {
     private final ArticleMapper articleMapper;
 
     @Override
-    public void createArticle(Article article) {
-        articleMapper.createArticle(article);
+    public int createArticle(Article article) {
+        return articleMapper.createArticle(article);
     }
 
     @Override
@@ -35,13 +35,13 @@ public class ArticleService implements ArticleMapper {
     }
 
     @Override
-    public void plusViewCount(Long articleId) {
-        articleMapper.plusViewCount(articleId);
+    public int plusViewCount(Long articleId) {
+        return articleMapper.plusViewCount(articleId);
     }
 
     @Override
-    public void deleteArticle(Long boardId, Long articleId) {
-        articleMapper.deleteArticle(boardId, articleId);
+    public int deleteArticle(Long boardId, Long articleId) {
+        return articleMapper.deleteArticle(boardId, articleId);
     }
 
     @Override

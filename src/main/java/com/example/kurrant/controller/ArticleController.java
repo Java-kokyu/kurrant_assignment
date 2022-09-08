@@ -6,10 +6,6 @@ import com.example.kurrant.dto.SqlRequest;
 import com.example.kurrant.model.Article;
 import com.example.kurrant.service.ArticleService;
 import lombok.RequiredArgsConstructor;
-import org.apache.ibatis.annotations.Delete;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -44,13 +40,7 @@ public class ArticleController {
     @GetMapping("/api/boards/{boardId}/articles")
     public List<Response> getArticleList(@PathVariable Long boardId) {
         List<Article> articles = articleService.getArticleList(boardId);
-        List<Response> responses = new ArrayList<>();
-        for (Article article : articles) {
-            String boardName = articleService.getBoardName(article.getBoard_id());
-            Response response = new Response(article, boardName);
-            responses.add(response);
-        }
-        return responses;
+        return getResponses(articles);
     }
 
     //4. 게시글 삭제
@@ -63,13 +53,7 @@ public class ArticleController {
     @GetMapping("/api/articles/search")
     public List<Response> searchArticleByKeyword(@RequestParam(required = false, defaultValue = "") String keyword) {
         List<Article> articles = articleService.searchArticleByKeyword(keyword);
-        List<Response> responses = new ArrayList<>();
-        for (Article article : articles) {
-            String boardName = articleService.getBoardName(article.getBoard_id());
-            Response response = new Response(article, boardName);
-            responses.add(response);
-        }
-        return responses;
+        return getResponses(articles);
     }
 
     //5. 게시글 조회
@@ -85,6 +69,10 @@ public class ArticleController {
                                                 Integer.parseInt(endDate.substring(6, 8)))
                                                 .atTime(LocalTime.MAX);
         List<Article> articles = articleService.searchArticleByDate(startDateTime, endDateTime);
+        return getResponses(articles);
+    }
+
+    public List<Response> getResponses(List<Article> articles) {
         List<Response> responses = new ArrayList<>();
         for (Article article : articles) {
             String boardName = articleService.getBoardName(article.getBoard_id());
@@ -92,13 +80,6 @@ public class ArticleController {
             responses.add(response);
         }
         return responses;
-    }
-
-
-    @GetMapping("/api/boards/{boardId}")
-    public String getBoardName(@PathVariable Long boardId) {
-        String boardName = articleService.getBoardName(boardId);
-        return boardName;
     }
 
 
